@@ -124,17 +124,57 @@ func NewListValue(v *ListValue) *Value {
 	return &Value{Kind: &Value_ListValue{ListValue: v}}
 }
 
+// Unwrap returns the underlying value
+// it's type may be nil, int64, float64, string, bool, *Struct, *ListValue
+//
+// Call from a nil is safe
+func (x *Value) Unwrap() interface{} {
+	switch v := x.GetKind().(type) {
+	case *Value_IntValue:
+		if v != nil {
+			return v.IntValue
+		}
+	case *Value_FloatValue:
+		if v != nil {
+			return v.FloatValue
+		}
+	case *Value_StringValue:
+		if v != nil {
+			return v.StringValue
+		}
+	case *Value_BoolValue:
+		if v != nil {
+			return v.BoolValue
+		}
+	case *Value_StructValue:
+		if v != nil {
+			return v.StructValue
+		}
+	case *Value_ListValue:
+		if v != nil {
+			return v.ListValue
+		}
+	}
+
+	return nil
+}
+
 // AsInterface converts x to a general-purpose Go interface.
 //
-// Calling Value.MarshalJSON and "encoding/json".Marshal on this output produce
-// semantically equivalent JSON (assuming no errors occur).
+// Unlike Unwrap, this function will always return Go's basic types.
 //
-// Floating-point values (i.e., "NaN", "Infinity", and "-Infinity") are
-// converted as strings to remain compatible with MarshalJSON.
+// For Null, Int, String, Bool, the return value is same as Unwrap (will return nil, int64, string, bool)
+// For Float, this may return a float64 or "NaN" "Infinity" "-Infinity" string
+// For Struct, this will return a map[string]interface{}, which is returned from (*Struct).AsMap()
+// For List, this will return a []interface{}, which is returned from (*ListValue).AsSlice()
+//
+// Call from nil is safe
 func (x *Value) AsInterface() interface{} {
 	switch v := x.GetKind().(type) {
 	case *Value_IntValue:
-		return v.IntValue
+		if v != nil {
+			return v.IntValue
+		}
 	case *Value_FloatValue:
 		if v != nil {
 			switch {
