@@ -9,6 +9,10 @@ func (x *NullValue) ToStarlark() starlark.NoneType {
 }
 
 func (x *ListValue) ToStarlark() *starlark.List {
+	if x == nil {
+		return starlark.NewList(nil)
+	}
+
 	elems := make([]starlark.Value, len(x.Values))
 
 	for i, v := range x.Values {
@@ -19,6 +23,10 @@ func (x *ListValue) ToStarlark() *starlark.List {
 }
 
 func (x *Struct) ToStarlark() *starlark.Dict {
+	if x == nil {
+		return starlark.NewDict(0)
+	}
+
 	dict := starlark.NewDict(len(x.Fields))
 
 	for k, v := range x.Fields {
