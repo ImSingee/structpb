@@ -5,6 +5,10 @@ import (
 	"unicode/utf8"
 )
 
+func NewEmptyStruct() *Struct {
+	return &Struct{Fields: map[string]*Value{}}
+}
+
 // NewStruct constructs a Struct from a general-purpose Go map.
 // The map keys must be valid UTF-8.
 // The map values are converted using NewValue.

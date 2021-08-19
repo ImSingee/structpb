@@ -1,5 +1,9 @@
 package structpb
 
+func NewEmptyList() *ListValue {
+	return &ListValue{}
+}
+
 // NewStringList constructs a ListValue from a gstring Go slice.
 // The slice elements are converted using NewValue.
 func NewStringList(v []string) (*ListValue, error) {
