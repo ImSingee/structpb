@@ -27,6 +27,14 @@ func NewStruct(v map[string]interface{}) (*Struct, error) {
 	return x, nil
 }
 
+// Get equals x.Fields[key] but can be called from nil safely
+func (x *Struct) Get(key string) *Value {
+	if x == nil || x.Fields == nil {
+		return nil
+	}
+	return x.Fields[key]
+}
+
 // AsMap converts x to a general-purpose Go map.
 // The map values are converted by calling Value.AsInterface.
 func (x *Struct) AsMap() map[string]interface{} {
