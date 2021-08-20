@@ -35,6 +35,21 @@ func (x *Struct) Get(key string) *Value {
 	return x.Fields[key]
 }
 
+// Set equals x.Fields[key] = value but is more safe
+// return value is false only if struct == nil
+func (x *Struct) Set(key string, value *Value) bool {
+	if x == nil {
+		return false
+	}
+
+	if x.Fields == nil {
+		x.Fields = map[string]*Value{key: value}
+	} else {
+		x.Fields[key] = value
+	}
+	return true
+}
+
 // AsMap converts x to a general-purpose Go map.
 // The map values are converted by calling Value.AsInterface.
 func (x *Struct) AsMap() map[string]interface{} {
