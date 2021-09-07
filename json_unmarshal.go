@@ -7,24 +7,24 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 )
 
-var _ json.Unmarshaler = (*ListValue)(nil)
-var _ json.Unmarshaler = (*Struct)(nil)
+var _ json.Unmarshaler = (*List)(nil)
+var _ json.Unmarshaler = (*Dict)(nil)
 var _ json.Unmarshaler = (*Value)(nil)
 
-func (x *ListValue) UnmarshalJSON(p []byte) error {
+func (x *List) UnmarshalJSON(p []byte) error {
 	return json.Unmarshal(p, &x.Values)
 }
-func (x *ListValue) UnmarshalJSONPB(_ *jsonpb.Unmarshaler, p []byte) error {
+func (x *List) UnmarshalJSONPB(_ *jsonpb.Unmarshaler, p []byte) error {
 	return x.UnmarshalJSON(p)
 }
 
-func (x *Struct) UnmarshalJSON(p []byte) error {
+func (x *Dict) UnmarshalJSON(p []byte) error {
 	if x.Fields == nil {
 		x.Fields = make(map[string]*Value)
 	}
 	return json.Unmarshal(p, &x.Fields)
 }
-func (x *Struct) UnmarshalJSONPB(_ *jsonpb.Unmarshaler, p []byte) error {
+func (x *Dict) UnmarshalJSONPB(_ *jsonpb.Unmarshaler, p []byte) error {
 	return x.UnmarshalJSON(p)
 }
 
@@ -44,15 +44,15 @@ func (x *Value) UnmarshalJSON(p []byte) error {
 		x.Kind = &Value_StringValue{StringValue: s}
 		return nil
 	case '{':
-		var s Struct
+		var s Dict
 		err := s.UnmarshalJSON(p)
 		if err != nil {
 			return err
 		}
-		x.Kind = &Value_StructValue{StructValue: &s}
+		x.Kind = &Value_DictValue{DictValue: &s}
 		return nil
 	case '[':
-		var l ListValue
+		var l List
 		err := l.UnmarshalJSON(p)
 		if err != nil {
 			return err

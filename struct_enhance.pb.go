@@ -6,12 +6,12 @@ import (
 	proto "google.golang.org/protobuf/proto"
 )
 
-func (x *Struct) Clone() *Struct {
-	return proto.Clone(x).(*Struct)
+func (x *Dict) Clone() *Dict {
+	return proto.Clone(x).(*Dict)
 }
 func (x *Value) Clone() *Value {
 	return proto.Clone(x).(*Value)
 }
-func (x *ListValue) Clone() *ListValue {
-	return proto.Clone(x).(*ListValue)
+func (x *List) Clone() *List {
+	return proto.Clone(x).(*List)
 }

@@ -8,7 +8,7 @@ func (x *NullValue) ToStarlark() starlark.NoneType {
 	return starlark.None
 }
 
-func (x *ListValue) ToStarlark() *starlark.List {
+func (x *List) ToStarlark() *starlark.List {
 	if x == nil {
 		return starlark.NewList(nil)
 	}
@@ -22,7 +22,7 @@ func (x *ListValue) ToStarlark() *starlark.List {
 	return starlark.NewList(elems)
 }
 
-func (x *Struct) ToStarlark() *starlark.Dict {
+func (x *Dict) ToStarlark() *starlark.Dict {
 	if x == nil {
 		return starlark.NewDict(0)
 	}
@@ -50,8 +50,8 @@ func (x *Value) ToStarlark() starlark.Value {
 		return starlark.String(v.StringValue)
 	case *Value_BoolValue:
 		return starlark.Bool(v.BoolValue)
-	case *Value_StructValue:
-		return v.StructValue.ToStarlark()
+	case *Value_DictValue:
+		return v.DictValue.ToStarlark()
 	case *Value_ListValue:
 		return v.ListValue.ToStarlark()
 	default:

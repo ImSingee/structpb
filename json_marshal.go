@@ -25,15 +25,15 @@ func marshalJSON(m *jsonpb.Marshaler, data interface{}) ([]byte, error) {
 	}
 }
 
-func (x *Struct) MarshalJSONPB(m *jsonpb.Marshaler) ([]byte, error) {
+func (x *Dict) MarshalJSONPB(m *jsonpb.Marshaler) ([]byte, error) {
 	return marshalJSON(m, x.AsMap())
 }
-func (x *Struct) MarshalJSON() ([]byte, error) { return x.MarshalJSONPB(nil) }
+func (x *Dict) MarshalJSON() ([]byte, error) { return x.MarshalJSONPB(nil) }
 
-func (x *ListValue) MarshalJSONPB(m *jsonpb.Marshaler) ([]byte, error) {
+func (x *List) MarshalJSONPB(m *jsonpb.Marshaler) ([]byte, error) {
 	return marshalJSON(m, x.AsSlice())
 }
-func (x *ListValue) MarshalJSON() ([]byte, error) { return x.MarshalJSONPB(nil) }
+func (x *List) MarshalJSON() ([]byte, error) { return x.MarshalJSONPB(nil) }
 
 func (x *Value) MarshalJSONPB(m *jsonpb.Marshaler) ([]byte, error) {
 	return marshalJSON(m, x.AsInterface())

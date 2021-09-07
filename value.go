@@ -73,7 +73,7 @@ func NewValue(v interface{}) (*Value, error) {
 		s := base64.StdEncoding.EncodeToString(v)
 		return NewStringValue(s), nil
 	case map[string]interface{}:
-		v2, err := NewStruct(v)
+		v2, err := NewDict(v)
 		if err != nil {
 			return nil, err
 		}
@@ -115,17 +115,17 @@ func NewStringValue(v string) *Value {
 }
 
 // NewStructValue constructs a new struct Value.
-func NewStructValue(v *Struct) *Value {
-	return &Value{Kind: &Value_StructValue{StructValue: v}}
+func NewStructValue(v *Dict) *Value {
+	return &Value{Kind: &Value_DictValue{DictValue: v}}
 }
 
 // NewListValue constructs a new list Value.
-func NewListValue(v *ListValue) *Value {
+func NewListValue(v *List) *Value {
 	return &Value{Kind: &Value_ListValue{ListValue: v}}
 }
 
 // Unwrap returns the underlying value
-// it's type may be nil, int64, float64, string, bool, *Struct, *ListValue
+// it's type may be nil, int64, float64, string, bool, *Dict, *List
 //
 // Call from a nil is safe
 func (x *Value) Unwrap() interface{} {
@@ -146,9 +146,9 @@ func (x *Value) Unwrap() interface{} {
 		if v != nil {
 			return v.BoolValue
 		}
-	case *Value_StructValue:
+	case *Value_DictValue:
 		if v != nil {
-			return v.StructValue
+			return v.DictValue
 		}
 	case *Value_ListValue:
 		if v != nil {
@@ -165,8 +165,8 @@ func (x *Value) Unwrap() interface{} {
 //
 // For Null, Int, String, Bool, the return value is same as Unwrap (will return nil, int64, string, bool)
 // For Float, this may return a float64 or "NaN" "Infinity" "-Infinity" string
-// For Struct, this will return a map[string]interface{}, which is returned from (*Struct).AsMap()
-// For List, this will return a []interface{}, which is returned from (*ListValue).AsSlice()
+// For Dict, this will return a map[string]interface{}, which is returned from (*Dict).AsMap()
+// For List, this will return a []interface{}, which is returned from (*List).AsSlice()
 //
 // Call from nil is safe
 func (x *Value) AsInterface() interface{} {
@@ -196,9 +196,9 @@ func (x *Value) AsInterface() interface{} {
 		if v != nil {
 			return v.BoolValue
 		}
-	case *Value_StructValue:
+	case *Value_DictValue:
 		if v != nil {
-			return v.StructValue.AsMap()
+			return v.DictValue.AsMap()
 		}
 	case *Value_ListValue:
 		if v != nil {
